@@ -5,6 +5,7 @@ import com.spring.jdbc.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.NoSuchElementException;
 
 /**
  * JDBC - DriverManager 사용(굉장히 Low level)
@@ -43,6 +44,39 @@ public class MemberRepositoryVO {
             이렇게 나열하고 쓰면 안된다.
              */
         }
+    }
+
+    public Member findById(String memberId) throws SQLException{
+        String sql = "select * from member where member_id = ?";
+
+        Connection con = null; // try catch 후 finally에서 사용해야해서 밖에서 이렇게 선언할 수 밖에 없다.
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBConnectionUtil.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            rs = pstmt.executeQuery();//executeUpdate: data 변경 시, executeQuery: select할 때
+
+            //rs가 처음에는 아무데도 가리키지 않는다.
+            //next를 호출하면 데이터가 있는지 없는지 확인
+            //있으면 true, 없으면 false
+            if(rs.next()) { // 처음 rs.next해줘야 rs내부의 커서가 실제 데이터가 있는 곳으로 이동됨
+                Member member = new Member();
+                member.setMemberId(rs.getString("member_id"));
+                member.setMoney(rs.getInt("money"));
+                return member;
+            } else { //data 없으면
+                throw new NoSuchElementException("member not found memberId = " + memberId); // key값 남기는게 좋다.
+            }
+        } catch (SQLException e) {
+            log.info("db error", e);
+            throw e;
+        } finally {
+            close(con, pstmt, rs);
+        }
+
     }
 
     /**
