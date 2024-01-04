@@ -34,6 +34,23 @@ public class ConnectionTest {
         useDataSource(dataSource);
     }
 
+    @Test
+    void dataSourceConnectionPool() throws SQLException, InterruptedException {
+        //커넥션 풀링: Hikari 이용
+        HikariDataSource dataSource = new HikariDataSource();//Hikari꺼고 스프링에서 jdbc를 쓰면 자동 import된다.
+        //implement로 datasource 구현 중이다. -> 따라서 DataSource dataSource = new HikariDataSource(); 이렇게도 가능, 하지만 세팅할 것이 있어서 HikariDataSource 이렇게 사용
+
+        dataSource.setJdbcUrl(URL);
+        dataSource.setUsername(USER_NAME);
+        dataSource.setPassword(PASSWORD);
+        dataSource.setMaximumPoolSize(10);//지정 안 해도 default가 10개다.
+        dataSource.setPoolName("MyPool"); //지정 안 하면 기본풀 나옴
+
+        useDataSource(dataSource);
+        //여기까지 그냥 이대로 실행하면 안 된다.
+        Thread.sleep(1000); // Tread.sleep까지 꼭 해줘야 한다.!!
+    }
+
     private void useDataSource(DataSource dataSource) throws SQLException { //driverManager 테스ㅌ, 코드와 차이점은 DataSource라는 인터페이스를 통해서 가져온다는 점이다.
         Connection con1 = dataSource.getConnection();
         Connection con2 = dataSource.getConnection(); //close안하면 활성화된거로 뜬다.
