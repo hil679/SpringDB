@@ -28,6 +28,7 @@ public class MemberRepositoryV1 {
 
         try {
             con = getConnection();
+            System.out.println("save");
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, member.getMemberId());
             pstmt.setInt(2, member.getMoney());
@@ -49,7 +50,8 @@ public class MemberRepositoryV1 {
         ResultSet rs = null;
 
         try {
-            con = DBConnectionUtil.getConnection();
+            con = getConnection();
+            System.out.println("find");
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, memberId);
             rs = pstmt.executeQuery();
@@ -78,6 +80,7 @@ public class MemberRepositoryV1 {
 
         try{
             con = getConnection();
+            System.out.println("update");
             pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, money);
             pstmt.setString(2, memberId);
@@ -99,6 +102,7 @@ public class MemberRepositoryV1 {
 
         try {
             con = getConnection();
+            System.out.println("delete");
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, memberId);
             pstmt.executeUpdate();
@@ -119,6 +123,6 @@ public class MemberRepositoryV1 {
     private Connection getConnection() throws SQLException {
         Connection con = dataSource.getConnection();
         log.info("get connection={} class={}", con, con.getClass());
-        return DBConnectionUtil.getConnection();
+        return con;
     }
 }
