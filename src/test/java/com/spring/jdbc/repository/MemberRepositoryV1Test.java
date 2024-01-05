@@ -1,6 +1,7 @@
 package com.spring.jdbc.repository;
 
 import com.spring.jdbc.domain.Member;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,16 @@ class MemberRepositoryV1Test {
     @BeforeEach
     void beforeEach() {
         //기본 DriverManager - 항상 새로운 커넥션을 획득
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USER_NAME, PASSWORD);
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USER_NAME, PASSWORD);
+
+        //커넥션 풀링 - Hikari 이용
+        HikariDataSource dataSource = new HikariDataSource();
+        // HikariDataSource 대신 DataSource dataSource를 적으면
+        // DataSource에는 setJdbcUrl이런 인터페이스가 없기 때문에 설정이 안돼서 오류남
+        // 따라서 객체 생성 시에는 구체적인 타입을 받아야하고, 의존관계 주입에서는 DataSource로 받으면 된다.
+        dataSource.setJdbcUrl(URL);
+        dataSource.setUsername(USER_NAME);
+        dataSource.setPassword(PASSWORD);
 
         repository = new MemberRepositoryV1(dataSource);
     }
@@ -49,5 +59,11 @@ class MemberRepositoryV1Test {
         // 또한 내가 사용한 데이터로 인해 다른 테스트에 영향을 줄 수 있기 때문이다. (내가 사용한 데이터를 다른사람도 똑같이 테스트하려고 할 수 있다.)
         assertThatThrownBy(() -> repository.findById(member.getMemberId())) //findById에서 없으면 NoSuchElementException에러 터지게 작업했음
                 .isInstanceOf(NoSuchElementException.class);
+
+        try {
+            Thread.sleep(1000); // log보려고
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
