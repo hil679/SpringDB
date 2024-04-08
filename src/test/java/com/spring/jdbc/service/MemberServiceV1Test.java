@@ -58,8 +58,8 @@ class MemberServiceV1Test { //테스트는 public 없어도 됨
         Member findMemberA = memberRepositoryV1.findById(memberA.getMemberId());
         Member findMemberB = memberRepositoryV1.findById(memberB.getMemberId());
 
-        assertThat(memberA.getMoney()).isEqualTo(8000); //assertj꺼가 편함
-        assertThat(memberB.getMoney()).isEqualTo(12000);
+        assertThat(findMemberA.getMoney()).isEqualTo(8000); //assertj꺼가 편함
+        assertThat(findMemberB.getMoney()).isEqualTo(12000);
     }
 
     @Test
@@ -80,8 +80,8 @@ class MemberServiceV1Test { //테스트는 public 없어도 됨
         Member findMemberA = memberRepositoryV1.findById(memberA.getMemberId());
         Member findMemberB = memberRepositoryV1.findById(memberEX.getMemberId());
 
-        assertThat(memberA.getMoney()).isEqualTo(8000);
+        assertThat(findMemberA.getMoney()).isEqualTo(8000);
         //memberServiceV1 accountTransfer에서 autocommit 모드라 memberA만 바뀜
-        assertThat(memberEX.getMoney()).isEqualTo(10000);
+        assertThat(findMemberB.getMoney()).isEqualTo(10000);
     }
 }
