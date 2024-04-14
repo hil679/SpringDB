@@ -14,7 +14,7 @@ public class CheckedTest {
     }
 
     @Test
-    void checked_throw() { // 그냥 throws MyCheckedException하면 exception 던져지면서 test 실패 
+    void checked_throw() { // 그냥 throws MyCheckedException하면 exception 던져지면서 test 실패
         Service service = new Service();
 
         assertThatThrownBy(() -> service.callThrow())
