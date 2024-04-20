@@ -3,6 +3,7 @@ package com.spring.jdbc.service;
 import com.spring.jdbc.domain.Member;
 import com.spring.jdbc.repository.MemberRepository;
 import com.spring.jdbc.repository.MemberRepositoryV4_1;
+import com.spring.jdbc.repository.MemberRepositoryV4_2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +48,8 @@ class MemberServiceV4Test {
 
         @Bean
         MemberRepository memberRepository() {
-            return new MemberRepositoryV4_1(dataSource); //원하는 거로 갈아끼움
+//            return new MemberRepositoryV4_1(dataSource); //원하는 거로 갈아끼움
+            return new MemberRepositoryV4_2(dataSource);
         }
         @Bean
         MemberServiceV4 memberService() {
