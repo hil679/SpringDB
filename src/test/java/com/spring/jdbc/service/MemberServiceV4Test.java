@@ -4,6 +4,7 @@ import com.spring.jdbc.domain.Member;
 import com.spring.jdbc.repository.MemberRepository;
 import com.spring.jdbc.repository.MemberRepositoryV4_1;
 import com.spring.jdbc.repository.MemberRepositoryV4_2;
+import com.spring.jdbc.repository.MemberRepositoryV5;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * 예외 누수 문제 해결
+ * 예외 누수 문제 해결 ~ jdbctemplate까지
  * SQLException 해결
  *
  * MemberRepository interface에 의존
@@ -49,7 +50,8 @@ class MemberServiceV4Test {
         @Bean
         MemberRepository memberRepository() {
 //            return new MemberRepositoryV4_1(dataSource); //원하는 거로 갈아끼움
-            return new MemberRepositoryV4_2(dataSource);
+//            return new MemberRepositoryV4_2(dataSource);
+            return new MemberRepositoryV5(dataSource);
         }
         @Bean
         MemberServiceV4 memberService() {
